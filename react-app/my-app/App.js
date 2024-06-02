@@ -1,18 +1,63 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View ,TouchableOpacity,Image} from 'react-native';
+import { StyleSheet, Text, View ,TouchableOpacity,Image,Button,Alert,Pressable} from 'react-native';
 import {Dimensions} from 'react-native';
+import {LinearGradient as BLinearGradient} from 'react-native-linear-gradient';
 
 import Svg, {
   G,
   Path,
   Defs,
-  LinearGradient,
   Stop,
   ClipPath,
+  LinearGradient,
+  Text as SvgText,
+  Rect,
 } from 'react-native-svg';
 
 
 export default function App() {
+
+  const GradientText = ({ text, style, gradientColors }) => {
+    return (
+      <Svg height="60" width="200">
+        <Defs>
+          <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
+            {gradientColors.map((color, index) => (
+              <Stop key={index} offset={`${(index / (gradientColors.length - 1)) * 100}%`} stopColor={color} />
+            ))}
+          </LinearGradient>
+        </Defs>
+        <SvgText
+          fill="url(#grad)"
+          fontSize="27"
+          fontWeight="bold"
+          x="10"
+          y="40"
+        >
+          {text}
+        </SvgText>
+      </Svg>
+    );
+  };
+
+  const GradientButton = ({ text, onPress }) => {
+    return (
+      <TouchableOpacity style={styles.Detalle} onPress={onPress}>
+        <Svg height="60" width="100%" style={styles.svg}>
+          <Defs>
+            <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
+              <Stop offset="0%" stopColor="#B829AA" />
+              <Stop offset="50%" stopColor="#FD1D1D" />
+              <Stop offset="100%" stopColor="#FCB045" />
+            </LinearGradient>
+          </Defs>
+          <Rect x="0" y="0" width="100%" height="100%" fill="url(#grad)" rx="0" ry="0" />
+        </Svg>
+        <Text style={styles.buttonText}>{text}</Text>
+      </TouchableOpacity>
+    );
+  };
+
 
 function SvgTop() {
   return(
@@ -29,47 +74,39 @@ function SvgTop() {
           mixBlendMode: "screen",
         }}
       >
-        <Path fill="url(#c)" d="M488 0H-29.554L-33 357h521V0Z" />
+        <Path fill="url(#c)" d="M509 0H-8.554L-12 357h521V0Z" />
       </G>
       <G filter="url(#d)">
         <Path
           fill="#E9E3E3"
           fillOpacity={0.97}
-          d="M-33 356.397c416.8 1.012 521-35.843 521-54.397v64h-64.866L-33 356.397Z"
+          d="M-33 355.397c391.2 1.012 489-35.843 489-54.397v64h-60.882L-33 355.397Z"
         />
       </G>
       <Path
-        stroke="#fff"
-        d="M-33 356.397c416.8 1.012 521-35.843 521-54.397v64m-521-9.603L423.134 366H488m-521-9.603L488 366"
-      />
-      <Path
-        stroke="#FFE1E1"
-        d="M-33 356.397c416.8 1.012 521-35.843 521-54.397v64m-521-9.603L423.134 366H488m-521-9.603L488 366"
-      />
-      <Path
         fill="url(#e)"
-        d="M221 98c-1.333 0-2.665.605-3.333 1.805-6.081 10.992-12.363 19.831-17.906 27.627-9.57 13.466-17.137 24.099-17.137 37.044-.007 20.793 17.218 37.714 38.376 37.714 21.158 0 38.376-16.921 38.376-37.714 0-12.945-7.552-23.578-17.122-37.044-5.543-7.796-11.847-16.635-17.921-27.627-.668-1.2-2-1.805-3.333-1.805Zm0 11.15c5.195 8.712 10.362 15.988 15.019 22.547 9.153 12.877 15.773 22.181 15.773 32.779.008 16.694-13.813 30.261-30.792 30.261s-30.792-13.567-30.792-30.261c0-10.598 6.62-19.902 15.773-32.779 4.657-6.559 9.832-13.835 15.019-22.547Zm-48.67 61.046a3.866 3.866 0 0 0-1.51.059c-25.943 6.096-40.82 16.367-40.82 28.209C130 220.247 176.888 232 221 232s91-11.753 91-33.536c0-11.842-14.884-22.121-40.834-28.209-2.056-.485-4.077.768-4.562 2.765-.486 2.005.767 3.999 2.799 4.483 21.271 4.986 35.014 13.217 35.014 20.961 0 12.334-34.262 26.083-83.417 26.083s-83.417-13.749-83.417-26.083c0-7.744 13.736-15.967 34.999-20.961 2.04-.477 3.307-2.493 2.814-4.497-.364-1.498-1.603-2.57-3.066-2.81Zm6.221 13.261c-17.366 3.42-25.801 8.329-25.801 15.007 0 14.711 42.899 18.631 68.25 18.631s68.25-3.92 68.25-18.631c0-6.678-8.428-11.587-25.786-15.007-2.033-.418-4.056.898-4.473 2.925-.417 2.027.922 3.972 2.977 4.382 15.705 3.092 19.547 6.873 19.713 7.671-.728 3.808-22.795 11.207-60.681 11.207-37.886 0-59.946-7.386-60.667-11.149.16-.842 4.001-4.637 19.714-7.729 2.055-.41 3.372-2.355 2.962-4.382-.409-2.027-2.441-3.335-4.458-2.925Z"
+        d="M228 82c-1.465 0-2.929.704-3.662 2.101-6.683 12.797-13.586 23.088-19.678 32.163-10.517 15.677-18.831 28.056-18.831 43.126-.009 24.206 18.921 43.906 42.171 43.906s42.171-19.7 42.171-43.906c0-15.07-8.298-27.449-18.815-43.126-6.092-9.075-13.019-19.365-19.694-32.163C230.929 82.704 229.465 82 228 82Zm0 12.98c5.708 10.143 11.387 18.614 16.504 26.249 10.058 14.992 17.334 25.824 17.334 38.161.008 19.434-15.18 35.23-33.838 35.23s-33.838-15.796-33.838-35.23c0-12.337 7.276-23.169 17.334-38.161 5.117-7.635 10.804-16.106 16.504-26.249Zm-53.483 71.07a3.998 3.998 0 0 0-1.66.067C144.348 173.214 128 185.171 128 198.958 128 224.318 179.525 238 228 238s100-13.682 100-39.042c0-13.787-16.356-25.752-44.873-32.841-2.258-.564-4.48.895-5.013 3.22-.533 2.334.843 4.655 3.076 5.219 23.375 5.804 38.477 15.387 38.477 24.402 0 14.359-37.65 30.366-91.667 30.366s-91.667-16.007-91.667-30.366c0-9.015 15.094-18.589 38.461-24.402 2.241-.555 3.634-2.902 3.092-5.236-.4-1.744-1.762-2.992-3.369-3.27Zm6.836 15.437C162.27 185.469 153 191.184 153 198.958c0 17.126 47.142 21.69 75 21.69 27.858 0 75-4.564 75-21.69 0-7.774-9.262-13.489-28.337-17.471-2.233-.486-4.457 1.046-4.915 3.406-.458 2.36 1.013 4.623 3.272 5.1 17.258 3.601 21.48 8.002 21.663 8.931-.8 4.433-25.05 13.048-66.683 13.048-41.633 0-65.875-8.599-66.667-12.98.175-.981 4.397-5.398 21.664-8.999 2.258-.477 3.705-2.74 3.255-5.1-.45-2.36-2.682-3.883-4.899-3.406Z"
       />
     </G>
     <Defs>
       <LinearGradient
         id="c"
-        x1={-33}
-        x2={488}
+        x1={-12}
+        x2={509}
         y1={178.5}
         y2={178.5}
         gradientUnits="userSpaceOnUse"
       >
-        <Stop stopColor="#E213F5" />
+        <Stop stopColor="#B829AA" />
         <Stop offset={0.5} stopColor="#FD1D1D" />
         <Stop offset={1} stopColor="#FCB045" />
       </LinearGradient>
       <LinearGradient
         id="e"
-        x1={130}
-        x2={281.667}
-        y1={165.002}
-        y2={165.002}
+        x1={128}
+        x2={294.667}
+        y1={160.002}
+        y2={160.002}
         gradientUnits="userSpaceOnUse"
       >
         <Stop stopColor="#fff" />
@@ -88,14 +125,12 @@ function SvgTop() {
 function Adbuton() {
   return(
 
-    <TouchableOpacity style={styles.connect}>
-      <LinearGradient>
-        colors={['#e213f5','#fd1d1d','#fcb045']}
-        start={{x:1, y:0}}
-        end={{x:0, y:1}}
-        
-      </LinearGradient>
-    <Text style={styles.Title}>Conectar</Text>
+    <TouchableOpacity style={styles.connect} onPress={() => Alert.alert('Simple Button pressed')}>
+   
+
+    <GradientText text="Conectar" style={styles.Title} gradientColors={['#B829AA', '#FD1D1D', '#FCB045']} />
+
+      
 
 </TouchableOpacity>
   );
@@ -107,20 +142,27 @@ function Adbuton() {
 
   return (
     <View style={styles.container}>
+      
+      
+
       <View style={styles.Svg}>
       <SvgTop />
       </View>
       
       <Adbuton />
-     
-      <Text style={styles.Detalle}>Detalles</Text>
+      
+     {/* <TouchableOpacity style={styles.Detalle} onPress={() => Alert.alert('Simple Button pressed')}> */}
+     <GradientButton text="Detalles"   onPress={() => Alert.alert('Button pressed')} />
+      
+    
+      
       
         {/* <LinearGradient  colors={['#e213f5','#fd1d1d','#fcb045']}
         start={{x:1, y:0}}
         end={{x:0, y:1}}
         </LinearGradient>
         > */}
-      <Text style={styles.Home}>Home</Text>
+      
         
         
         
@@ -165,19 +207,19 @@ const styles = StyleSheet.create({
   Detalle: {
     backgroundColor: 'whitesmoke',
     alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    fontSize: 21,
+    justifyContent: 'center',
+    fontSize: 25,
     marginTop: windowHeight/3,
-    flexDirection: 'row', 
     bottom: 0,
-    width: windowWidth/3.7,
+    width: windowWidth,
     borderColor: 'black',
     borderWidth: 1,    
     position: 'absolute',
-    borderRadius: 30,
-    right: 50,
-    padding: 8,
+    height: 50,
+    padding: 10,
     paddingLeft: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
  Home : {
     alignItems: 'flex-end',
@@ -216,5 +258,28 @@ const styles = StyleSheet.create({
     height:150,
     top: windowHeight/1.8,
     width:150,
+    paddingLeft: 60,
+  },
+  svg: {
+    position: 'absolute',
+    top: 0,
+    flex: 1,
+    zIndex: -1,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    bottom: 0,
+    width: windowWidth,
+    height: 50,
+    padding: 10,
+    textAlign: 'center',
+    fontWeight: 'bold',
+
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 26,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    right: 120,
   },
 });
