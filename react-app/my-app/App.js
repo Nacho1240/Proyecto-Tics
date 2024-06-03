@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View ,TouchableOpacity,Image,Button,Alert,Pressable} from 'react-native';
 import {Dimensions} from 'react-native';
 import {LinearGradient as BLinearGradient} from 'react-native-linear-gradient';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 
 import Svg, {
   G,
@@ -43,7 +45,7 @@ export default function App() {
   const GradientButton = ({ text, onPress }) => {
     return (
       <TouchableOpacity style={styles.Detalle} onPress={onPress}>
-        <Svg height="60" width="100%" style={styles.svg}>
+        <Svg height="60" width="110%" style={styles.svg}>
           <Defs>
             <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
               <Stop offset="0%" stopColor="#B829AA" />
@@ -53,7 +55,7 @@ export default function App() {
           </Defs>
           <Rect x="0" y="0" width="100%" height="100%" fill="url(#grad)" rx="0" ry="0" />
         </Svg>
-        <Text style={styles.buttonText}>{text}</Text>
+        <Text style={styles.Detalle}>{text}</Text>
       </TouchableOpacity>
     );
   };
@@ -205,21 +207,19 @@ const styles = StyleSheet.create({
     
   },
   Detalle: {
-    backgroundColor: 'whitesmoke',
     alignItems: 'flex-end',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     fontSize: 25,
     marginTop: windowHeight/3,
     bottom: 0,
-    width: windowWidth,
-    borderColor: 'black',
-    borderWidth: 1,    
+    width: windowWidth,    
     position: 'absolute',
     height: 50,
     padding: 10,
     paddingLeft: 15,
     textAlign: 'center',
     fontWeight: 'bold',
+    color: 'white',
   },
  Home : {
     alignItems: 'flex-end',
@@ -249,12 +249,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     zIndex: 1,
-    borderRadius: 80,
+    borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#E9E3E3',
-    borderColor: 'black',
-    borderWidth: 9,
+    borderLeftColor: 'purple',
+    borderRightColor: 'orange',
+    borderBottomColor: 'red',
+    borderTopColor: 'blue',
+    borderWidth: 6,
     height:150,
     top: windowHeight/1.8,
     width:150,
