@@ -4,6 +4,52 @@ import {Dimensions} from 'react-native';
 import {LinearGradient as BLinearGradient} from 'react-native-linear-gradient';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import Secondscreen from './Second';
+import Metrics from './Metrics';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import TableComponent from './Table';
+
+const Stack = createNativeStackNavigator();
+
+
+function HomeScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      
+      
+
+      <View style={styles.Svg}>
+      <SvgTop />
+      </View>
+      
+      <Adbuton />
+      
+     {/* <TouchableOpacity style={styles.Detalle} onPress={() => Alert.alert('Simple Button pressed')}> */}
+     <GradientButton text="Detalles"   onPress={() => navigation.navigate('Second')} />
+      
+    
+      
+      
+        {/* <LinearGradient  colors={['#e213f5','#fd1d1d','#fcb045']}
+        start={{x:1, y:0}}
+        end={{x:0, y:1}}
+        </LinearGradient>
+        > */}
+      
+        
+        
+        
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+
+
+
+
+
+
 
 import Svg, {
   G,
@@ -17,48 +63,7 @@ import Svg, {
 } from 'react-native-svg';
 
 
-export default function App() {
 
-  const GradientText = ({ text, style, gradientColors }) => {
-    return (
-      <Svg height="60" width="200">
-        <Defs>
-          <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
-            {gradientColors.map((color, index) => (
-              <Stop key={index} offset={`${(index / (gradientColors.length - 1)) * 100}%`} stopColor={color} />
-            ))}
-          </LinearGradient>
-        </Defs>
-        <SvgText
-          fill="url(#grad)"
-          fontSize="27"
-          fontWeight="bold"
-          x="10"
-          y="40"
-        >
-          {text}
-        </SvgText>
-      </Svg>
-    );
-  };
-
-  const GradientButton = ({ text, onPress }) => {
-    return (
-      <TouchableOpacity style={styles.Detalle} onPress={onPress}>
-        <Svg height="60" width="110%" style={styles.svg}>
-          <Defs>
-            <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
-              <Stop offset="0%" stopColor="#B829AA" />
-              <Stop offset="50%" stopColor="#FD1D1D" />
-              <Stop offset="100%" stopColor="#FCB045" />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width="100%" height="100%" fill="url(#grad)" rx="0" ry="0" />
-        </Svg>
-        <Text style={styles.Detalle}>{text}</Text>
-      </TouchableOpacity>
-    );
-  };
 
 
 function SvgTop() {
@@ -100,7 +105,7 @@ function SvgTop() {
         gradientUnits="userSpaceOnUse"
       >
         <Stop stopColor="#B829AA" />
-        <Stop offset={0.5} stopColor="#FD1D1D" />
+        <Stop offset={0.8} stopColor="#FD1D1D" />
         <Stop offset={1} stopColor="#FCB045" />
       </LinearGradient>
       <LinearGradient
@@ -123,6 +128,23 @@ function SvgTop() {
 
 }
 
+const GradientButton = ({ text, onPress }) => {
+  return (
+    <TouchableOpacity style={styles.Detalle} onPress={onPress}>
+      <Svg height="60" width="110%" style={styles.svg}>
+        <Defs>
+          <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
+            <Stop offset="0%" stopColor="#B829AA" />
+            <Stop offset="50%" stopColor="#FD1D1D" />
+            <Stop offset="100%" stopColor="#FCB045" />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width="100%" height="100%" fill="url(#grad)" rx="0" ry="0" />
+      </Svg>
+      <Text style={styles.Detalle}>{text}</Text>
+    </TouchableOpacity>
+  );
+};
 
 function Adbuton() {
   return(
@@ -137,40 +159,46 @@ function Adbuton() {
 </TouchableOpacity>
   );
 }
-
-
-
-
-
+const GradientText = ({ text, style, gradientColors }) => {
   return (
-    <View style={styles.container}>
-      
-      
-
-      <View style={styles.Svg}>
-      <SvgTop />
-      </View>
-      
-      <Adbuton />
-      
-     {/* <TouchableOpacity style={styles.Detalle} onPress={() => Alert.alert('Simple Button pressed')}> */}
-     <GradientButton text="Detalles"   onPress={() => Alert.alert('Button pressed')} />
-      
-    
-      
-      
-        {/* <LinearGradient  colors={['#e213f5','#fd1d1d','#fcb045']}
-        start={{x:1, y:0}}
-        end={{x:0, y:1}}
+    <Svg height="60" width="200">
+      <Defs>
+        <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">
+          {gradientColors.map((color, index) => (
+            <Stop key={index} offset={`${(index / (gradientColors.length - 1)) * 100}%`} stopColor={color} />
+          ))}
         </LinearGradient>
-        > */}
-      
-        
-        
-        
-      <StatusBar style="auto" />
-    </View>
+      </Defs>
+      <SvgText
+        fill="url(#grad)"
+        fontSize="27"
+        fontWeight="bold"
+        x="10"
+        y="40"
+      >
+        {text}
+      </SvgText>
+    </Svg>
   );
+};
+
+
+
+export default function App() {
+
+  
+return (
+  <NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Second" component={Secondscreen} />
+      <Stack.Screen name="Metrics" component={Metrics} />
+    </Stack.Navigator>
+  </NavigationContainer>
+);
+
+
+ 
 }
 
 
@@ -216,7 +244,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 50,
     padding: 10,
-    paddingLeft: 15,
+    paddingLeft: 8,
     textAlign: 'center',
     fontWeight: 'bold',
     color: 'white',
@@ -261,7 +289,8 @@ const styles = StyleSheet.create({
     height:150,
     top: windowHeight/1.8,
     width:150,
-    paddingLeft: 60,
+    paddingLeft: 70,
+    left: windowWidth/3.4,
   },
   svg: {
     position: 'absolute',
