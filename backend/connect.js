@@ -1,5 +1,11 @@
+const express = require('express');
 const { MongoClient } = require('mongodb');
-const io = require('socket.io')(server, {
+const http = require('http');
+const socketIo = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
@@ -7,7 +13,7 @@ const io = require('socket.io')(server, {
 });
 
 async function conectarMongoDB() {
-  const uri = "mongodb+srv://gonzalogaete:gonzalo210@clusterproyectos.yazmt42.mongodb.net/?retryWrites=true&w=majority&appName=ClusterProyectos";
+  const uri = "mongodb+srv://gonzalogaete:gonzalo210@clusterproyectos.yazmt42.mongodb.net/";
   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   
   try {
@@ -25,44 +31,49 @@ async function main() {
 
   try {
     client = await conectarMongoDB();
-    
-    io.on('connection', (socket) => {
-        console.log('Cliente conectado');
-      
-        socket.on('disconnect', () => {
-          console.log('Cliente desconectado');
-        });
-      
-        socket.on('/mediciones', async (datos) => {
-          console.log('Datos recibidos:', datos);
-          const medicion = {
-            ph: datos.ph,
-            microcomponentes: datos.microcomponentes,
-            timestamp: new Date()
-          };
 
-          try {
-            const db = client.db("tics1");
-            const collection = db.collection("mediciones");
-            await collection.insertOne(medicion);
-            console.log('Datos almacenados en MongoDB');
-          } catch (error) {
-            console.error('Error al guardar los datos en MongoDB:', error);
-          }
-        });
+    io.on('connection', (socket) => {
+      console.log('Cliente conectado');
+
+      socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
       });
-      
-      app.get('/mediciones', async (req, res) => {
+
+      socket.on('/mediciones', async (datos) => {
+        console.log('Datos recibidos:', datos);
+        const medicion = {
+          ph: datos.ph,
+          microcomponentes: datos.microcomponentes,
+          timestamp: new Date()
+        };
+
         try {
           const db = client.db("tics1");
           const collection = db.collection("mediciones");
-          const datos = await collection.find({}).toArray();
-          res.json(datos);
+          await collection.insertOne(medicion);
+          console.log('Datos almacenados en MongoDB');
         } catch (error) {
-          console.error('Error al obtener los datos:', error);
-          res.status(500).send('Error interno del servidor');
+          console.error('Error al guardar los datos en MongoDB:', error);
         }
       });
+    });
+
+    app.get('/mediciones', async (req, res) => {
+      try {
+        const db = client.db("tics1");
+        const collection = db.collection("mediciones");
+        const datos = await collection.find({}).toArray();
+        res.json(datos);
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
+        res.status(500).send('Error interno del servidor');
+      }
+    });
+
+    server.listen(3000, () => {
+      console.log('Servidor corriendo en el puerto 3000');
+    });
+
   } catch (error) {
     console.error("Error durante la inicialización:", error);
     if (client) {
