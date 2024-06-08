@@ -2,7 +2,7 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 const http = require('http');
 const socketIo = require('socket.io');
-
+require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -13,8 +13,11 @@ const io = socketIo(server, {
 });
 
 async function conectarMongoDB() {
-  const uri = "mongodb+srv://gonzalogaete:gonzalo210@clusterproyectos.yazmt42.mongodb.net/";
-  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  const password = process.env.MONGOPASS;
+  const uri = `mongodb+srv://gonzalogaete:${password}@clusterproyectos.yazmt42.mongodb.net/`;
+  const client = new MongoClient(uri, {
+    tlsAllowInvalidCertificates: true
+  });
   
   try {
     await client.connect();
