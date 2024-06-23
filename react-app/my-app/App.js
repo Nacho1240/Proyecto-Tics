@@ -7,7 +7,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import Secondscreen from './Second';
 import Metrics from './Metrics';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import TableComponent from './Table';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +24,7 @@ function HomeScreen({ navigation }) {
       <Adbuton />
       
      {/* <TouchableOpacity style={styles.Detalle} onPress={() => Alert.alert('Simple Button pressed')}> */}
-     <GradientButton text="Detalles"   onPress={() => navigation.navigate('Second')} />
+     <GradientButton text="Detalles"   onPress={() => navigation.navigate('Metricas')} />
       
     
       
@@ -191,8 +190,8 @@ return (
   <NavigationContainer>
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Second" component={Secondscreen} />
-      <Stack.Screen name="Metrics" component={Metrics} />
+      <Stack.Screen name="Calidad" component={Secondscreen} />
+      <Stack.Screen name="Metricas" component={Metrics} />
     </Stack.Navigator>
   </NavigationContainer>
 );

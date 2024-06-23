@@ -5,6 +5,7 @@ import {LinearGradient as BLinearGradient} from 'react-native-linear-gradient';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Secondscreen from './Second';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,7 +24,7 @@ return (
 
 };
 
-export default Metrics;
+export default Secondscreen;
 
 
 
