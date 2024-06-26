@@ -4,8 +4,8 @@ import {Dimensions} from 'react-native';
 import {LinearGradient as BLinearGradient} from 'react-native-linear-gradient';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import Secondscreen from './Second';
-import Metrics from './Metrics';
+import Secondscreen from './Metricas';
+import Metrics from './Calidad';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
@@ -24,7 +24,7 @@ function HomeScreen({ navigation }) {
       <Adbuton />
       
      {/* <TouchableOpacity style={styles.Detalle} onPress={() => Alert.alert('Simple Button pressed')}> */}
-     <GradientButton text="Detalles"   onPress={() => navigation.navigate('Metricas')} />
+     <GradientButton text="Detalles"   onPress={() => navigation.navigate('Calidad')} />
       
     
       
@@ -189,9 +189,9 @@ export default function App() {
 return (
   <NavigationContainer>
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Calidad" component={Secondscreen} />
-      <Stack.Screen name="Metricas" component={Metrics} />
+      <Stack.Screen name="Inicio" component={HomeScreen} />
+      <Stack.Screen name="Metricas" component={Secondscreen} />
+      <Stack.Screen name="Calidad" component={Metrics} />
     </Stack.Navigator>
   </NavigationContainer>
 );
@@ -314,3 +314,5 @@ const styles = StyleSheet.create({
     right: 120,
   },
 });
+
+export {GradientText};

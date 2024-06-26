@@ -9,8 +9,9 @@ const TableComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://192.168.1.9:3000/mediciones');
-        console.log('Datos recibidos:', response.data);
+        const response = await axios.get('https://fastify-test-my-water.vercel.app/api/mediciones');
+          //test de conexion con la base de datos
+        console.log('Conexion con la base de datos aprobada');
         setMediciones(response.data);
       } catch (error) {
         console.error('Error al obtener los datos:', error);
@@ -22,12 +23,21 @@ const TableComponent = () => {
     fetchData();
   }, []);
 
-  const renderItem = ({ item }) => (
+  // Función para obtener las últimas 3 mediciones
+  const obtenerUltimasMediciones = () => {
+    // Ordenar las mediciones por fecha de creación de forma descendente
+    const medicionesOrdenadas = [...mediciones].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    // Obtener las primeras 3 mediciones después de ordenar
+    return medicionesOrdenadas.slice(0, 3);
+  };
+
+  const renderItem = ({ item, index }) => (
     <View style={styles.card}>
-      <Text style={styles.cardTitle}>Medidas</Text>
+      <Text style={styles.cardTitle}>Medida N°{index + 1}</Text>
       <Text style={styles.cardText}>Ph: {item.ph}</Text>
-      <Text style={styles.cardText}>Microcomponentes: {item.microcomponentes.join(', ')}</Text>
-      <Text style={styles.cardText}>Fecha: {new Date(item.timestamp).toLocaleDateString()}</Text>
+      <Text style={styles.cardText}>Microcomponentes(TDS): {item.tds}</Text>
+      <Text style={styles.cardText}>Fecha: {new Date(item.createdAt).toLocaleDateString()}</Text>
     </View>
   );
 
@@ -39,9 +49,12 @@ const TableComponent = () => {
     return <Text style={styles.noDataText}>No hay datos disponibles</Text>;
   }
 
+  // Obtener solo las últimas 3 mediciones
+  const ultimasMediciones = obtenerUltimasMediciones();
+
   return (
     <FlatList
-      data={mediciones}
+      data={ultimasMediciones}
       renderItem={renderItem}
       keyExtractor={(item) => item._id}
       contentContainerStyle={styles.list}
