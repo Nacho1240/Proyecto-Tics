@@ -127,9 +127,9 @@ function SvgTop() {
 
 }
 
-const GradientButton = ({ text, onPress }) => {
+const GradientButton = ({ text, onPress, disabled }) => {
   return (
-    <TouchableOpacity style={styles.Detalle} onPress={onPress}>
+    <TouchableOpacity style={styles.Detalle} onPress={onPress} disabled={disabled}>
       <Svg height="60" width="110%" style={styles.svg}>
         <Defs>
           <LinearGradient id="grad" x1="0" y1="0" x2="100%" y2="0">

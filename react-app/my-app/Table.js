@@ -26,7 +26,7 @@ const TableComponent = () => {
   // Función para obtener las últimas 3 mediciones
   const obtenerUltimasMediciones = () => {
     // Ordenar las mediciones por fecha de creación de forma descendente
-    const medicionesOrdenadas = [...mediciones].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const medicionesOrdenadas = [...mediciones].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     
     // Obtener las primeras 3 mediciones después de ordenar
     return medicionesOrdenadas.slice(0, 3);

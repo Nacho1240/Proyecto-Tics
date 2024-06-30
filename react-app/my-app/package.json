@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
-  "icon": "./assets/icon.ico",
+  "icon": "./assets/Vector6.png",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
