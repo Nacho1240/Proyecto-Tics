@@ -4,20 +4,21 @@
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/Vector6.png",
+    "icon": "./assets/icono.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/Vector6.png",
+      "image": "./assets/test2.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.srpinguino.myapp"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Vector6.png",
-        "backgroundColor": "white"
+        "foregroundImage": "./assets/icono.png",
+        "backgroundColor": "#ffffff"
       },
       "package": "com.srpinguino.myapp"
     },

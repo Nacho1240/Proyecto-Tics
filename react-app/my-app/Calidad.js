@@ -15,7 +15,8 @@ const Secondscreen = ({ navigation }) => {
   const [progress, setProgress] = useState(0); // Estado para el progreso inicial
   const [loading, setLoading] = useState(true); // Estado para el indicador de carga
   const [averageMode, setAverageMode] = useState(false); // Estado para el modo de promedio de mediciones
-
+  const [isLoading, setIsLoading] = useState(true);
+  
   const toggleAverageMode = () => {
     setAverageMode(!averageMode);
   };
