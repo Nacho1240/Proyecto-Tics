@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View ,TouchableOpacity,Image,Button,Alert,Pressable} from 'react-native';
+import { StyleSheet, Text, View ,TouchableOpacity,Image,Button,Alert,Pressable,ActivityIndicator,Animated} from 'react-native';
 import {Dimensions} from 'react-native';
 import {LinearGradient as BLinearGradient} from 'react-native-linear-gradient';
-import * as React from 'react';
+import axios from 'axios'; 
+
+import React, { useState, useEffect,useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import Secondscreen from './Metricas';
 import Metrics from './Calidad';
@@ -11,37 +13,31 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
 
-function HomeScreen({ navigation }) {
+const HomeScreen = ({ navigation }) => {
+  const [connected, setConnected] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // Función para actualizar el estado de conexión
+  const handleConnectionStatus = (status) => {
+    setConnected(status);
+  };
+
   return (
     <View style={styles.container}>
-      
-      
-
       <View style={styles.Svg}>
-      <SvgTop />
+        <SvgTop />
       </View>
       
-      <Adbuton />
+      <Adbuton onConnectionChange={handleConnectionStatus} />
       
-     {/* <TouchableOpacity style={styles.Detalle} onPress={() => Alert.alert('Simple Button pressed')}> */}
-     <GradientButton text="Detalles"   onPress={() => navigation.navigate('Calidad')} />
+      {connected && (
+        <GradientButton text="Detalles" onPress={() => navigation.navigate('Calidad')} />
+      )}
       
-    
-      
-      
-        {/* <LinearGradient  colors={['#e213f5','#fd1d1d','#fcb045']}
-        start={{x:1, y:0}}
-        end={{x:0, y:1}}
-        </LinearGradient>
-        > */}
-      
-        
-        
-        
       <StatusBar style="auto" />
     </View>
   );
-}
+};
 
 
 
@@ -145,19 +141,60 @@ const GradientButton = ({ text, onPress, disabled }) => {
   );
 };
 
-function Adbuton() {
+const Adbuton = ({ onConnectionChange }) => {
+  const [connected, setConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const checkConnection = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get('https://fastify-test-my-water.vercel.app/api/comprobacion');
+      const isConnected = response.data;
+
+      setTimeout(() => {
+        setIsLoading(false);
+        setConnected(isConnected);
+        onConnectionChange(isConnected);
+        if (isConnected) {
+          Alert.alert('Conexión exitosa', 'Ya está conectado');
+        } else {
+          Alert.alert('No conectado', 'La conexión no está establecida');
+        }
+      }, 2000);
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error al verificar la conexión:', error);
+      Alert.alert('Error', 'Error al verificar la conexión');
+    }
+  };
+
+  const handlePress = () => {
+    Alert.alert('Cargando', 'Verificando conexión...');
+    checkConnection();
+  };
+
+
+
+
+
   return(
-
-    <TouchableOpacity style={styles.connect} onPress={() => Alert.alert('Simple Button pressed')}>
-   
-
-    <GradientText text="Conectar" style={styles.Title} gradientColors={['#B829AA', '#FD1D1D', '#FCB045']} />
-
-      
-
-</TouchableOpacity>
+    <TouchableOpacity
+      style={[connected ? styles.connect : styles.unconnect]}
+      onPress={handlePress}
+    >
+      <GradientText
+        text={connected ? 'Conectado' : 'Conectar'} // Cambia el texto según el estado de conexión
+        style={styles.Title}
+        gradientColors={['#B829AA', '#FD1D1D', '#FCB045']}
+      />
+      {isLoading && <ActivityIndicator style={styles.connect} color="#0000ff" />}
+    </TouchableOpacity>
+    
   );
 }
+
+
+
 const GradientText = ({ text, style, gradientColors }) => {
   return (
     <Svg height="60" width="200">
@@ -232,6 +269,7 @@ const styles = StyleSheet.create({
     Top: windowHeight/2,
     fontWeight: 'bold',
     
+    
   },
   Detalle: {
     alignItems: 'flex-end',
@@ -288,7 +326,26 @@ const styles = StyleSheet.create({
     height:150,
     top: windowHeight/1.8,
     width:150,
-    paddingLeft: 70,
+    paddingLeft: 50,
+    left: windowWidth/3.4,
+  },
+  unconnect: {
+    position: 'absolute',
+    alignSelf: 'center',
+    zIndex: 1,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E9E3E3',
+    borderLeftColor: 'purple',
+    borderRightColor: 'orange',
+    borderBottomColor: 'red',
+    borderTopColor: 'blue',
+    borderWidth: 6,
+    height:150,
+    top: windowHeight/1.8,
+    width:150,
+    paddingLeft: 65,
     left: windowWidth/3.4,
   },
   svg: {

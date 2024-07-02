@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "my-app",
+    "name": "MyWaterApp",
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icono.png",
+        "foregroundImage": "./assets/test2.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.srpinguino.myapp"

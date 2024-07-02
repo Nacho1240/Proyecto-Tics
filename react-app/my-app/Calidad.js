@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Switch } from 'react-native';
-import axios from 'axios'; // Asegúrate de importar axios si aún no lo has hecho
+import axios from 'axios'; 
 import ProgressCircle from './Porcent';
 import Svg, { LinearGradient, Stop, Text as SvgText } from 'react-native-svg';
 
