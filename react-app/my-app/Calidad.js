@@ -10,6 +10,9 @@ import Svg, { LinearGradient, Stop, Text as SvgText } from 'react-native-svg';
 
 
 const Secondscreen = ({ navigation }) => {
+  const [mediciones, setMediciones] = useState([]);
+
+  const [latestMeasurements, setLatestMeasurements] = useState([]);
   const [sensorPh, setSensorPh] = useState(null);
   const [sensorTds, setSensorTds] = useState(null);
   const [progress, setProgress] = useState(0); // Estado para el progreso inicial
@@ -28,16 +31,27 @@ const Secondscreen = ({ navigation }) => {
       try {
         const response = await axios.get('https://fastify-test-my-water.vercel.app/api/mediciones');
         if (response.data.length > 0) {
-          const measurements = response.data.slice(0, 3); // Obtener las últimas tres mediciones
-          const latestMeasurement = measurements[0];
 
-          // Actualizar valores de pH y TDS
+
+
+          setMediciones(response.data);
+
+
+          const latestThreeMeasurements = obtenerUltimasMediciones();
+          console.log('Ultimas mediciones:', latestThreeMeasurements);
+          // Actualizar el estado con las últimas tres mediciones
+          setLatestMeasurements(latestThreeMeasurements);
+  
+          // Tomar la medición más reciente para mostrar en la pantalla
+          const latestMeasurement = latestThreeMeasurements[0];
           setSensorPh(latestMeasurement.ph);
           setSensorTds(latestMeasurement.tds);
-
+  
           // Calcular el índice de calidad
-          const calidad = averageMode ? calcularCalidadPromedio(measurements) : calcularIndiceCalidad(latestMeasurement.ph, latestMeasurement.tds);
-          setProgress(calidad); // Actualizar el progreso con el índice de calidad calculado
+          const calidad = averageMode ? calcularCalidadPromedio(latestThreeMeasurements) : calcularIndiceCalidad(latestMeasurement.ph, latestMeasurement.tds);
+          setProgress(calidad);
+          console.log('Índice de calidad:', calcularIndiceCalidad(latestMeasurement.ph, latestMeasurement.tds));
+          console.log('Modo de promedio:', calcularCalidadPromedio(latestThreeMeasurements));
         } else {
           console.log('No se encontraron mediciones.');
         }
@@ -47,13 +61,27 @@ const Secondscreen = ({ navigation }) => {
         setLoading(false);
       }
     };
-
+  
     fetchData();
-  }, [averageMode]); // Asegúrate de actualizar cuando cambie el modo de promedio de mediciones
+  }, [averageMode]);
+  
+
+
+  const obtenerUltimasMediciones = () => {
+    // Ordenar las mediciones por fecha de creación de forma descendente
+    const medicionesOrdenadas = [...mediciones].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    // Obtener las primeras 3 mediciones después de ordenar
+    return medicionesOrdenadas.slice(0, 3);
+  };
+
+
+
+
+
+
 
   // Función para calcular el índice de calidad basado en una única medición
 const calcularIndiceCalidad = (ph, tds) => {
-  // Asignación de puntos para pH
   let puntosPh = 0;
   if (ph >= 0 && ph < 2) {
     puntosPh = 10; // Muy ácido
@@ -93,15 +121,15 @@ const calcularIndiceCalidad = (ph, tds) => {
 };
 
   // Función para calcular el índice de calidad promedio basado en las últimas tres mediciones
-  const calcularCalidadPromedio = (mediciones) => {
+  const calcularCalidadPromedio = (medicioness) => {
 
     let sumCalidad = 0;
-    for (let i = 0; i < mediciones.length; i++) {
-      const { ph, tds } = mediciones[i];
+    for (let i = 0; i < medicioness.length; i++) {
+      const { ph, tds } = medicioness[i];
       const calidad = calcularIndiceCalidad(ph, tds);
       sumCalidad += calidad;
     }
-    return sumCalidad / mediciones.length; // Retorna el promedio de las calidades calculadas
+    return sumCalidad / medicioness.length; // Retorna el promedio de las calidades calculadas
   };
 
   //Variar el color del círculo de progreso
