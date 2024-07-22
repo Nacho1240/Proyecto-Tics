@@ -15,7 +15,7 @@ const Secondscreen = ({ navigation }) => {
   const [latestMeasurements, setLatestMeasurements] = useState([]);
   const [sensorPh, setSensorPh] = useState(null);
   const [sensorTds, setSensorTds] = useState(null);
-  const [progress, setProgress] = useState(0); // Estado para el progreso inicial
+  const [progress, setProgress] = useState(null); // Estado para el progreso inicial
   const [loading, setLoading] = useState(true); // Estado para el indicador de carga
   const [averageMode, setAverageMode] = useState(false); // Estado para el modo de promedio de mediciones
   const [isLoading, setIsLoading] = useState(true);
@@ -31,27 +31,21 @@ const Secondscreen = ({ navigation }) => {
       try {
         const response = await axios.get('https://fastify-test-my-water.vercel.app/api/mediciones');
         if (response.data.length > 0) {
-
-
-
+          console.log('Mediciones:', response.data);
           setMediciones(response.data);
-
-
-          const latestThreeMeasurements = obtenerUltimasMediciones();
+          const latestThreeMeasurements = obtenerUltimasMediciones(response.data);
           console.log('Ultimas mediciones:', latestThreeMeasurements);
-          // Actualizar el estado con las últimas tres mediciones
           setLatestMeasurements(latestThreeMeasurements);
-  
-          // Tomar la medición más reciente para mostrar en la pantalla
+
           const latestMeasurement = latestThreeMeasurements[0];
-          setSensorPh(latestMeasurement.ph);
-          setSensorTds(latestMeasurement.tds);
-  
-          // Calcular el índice de calidad
-          const calidad = averageMode ? calcularCalidadPromedio(latestThreeMeasurements) : calcularIndiceCalidad(latestMeasurement.ph, latestMeasurement.tds);
-          setProgress(calidad);
-          console.log('Índice de calidad:', calcularIndiceCalidad(latestMeasurement.ph, latestMeasurement.tds));
-          console.log('Modo de promedio:', calcularCalidadPromedio(latestThreeMeasurements));
+          if (latestMeasurement) {
+            setSensorPh(latestMeasurement.ph);
+            setSensorTds(latestMeasurement.tds);
+            const calidad = averageMode ? calcularCalidadPromedio(latestThreeMeasurements) : calcularIndiceCalidad(latestMeasurement.ph, latestMeasurement.tds);
+            setProgress(calidad*2);
+            console.log('Índice de calidad:', calcularIndiceCalidad(latestMeasurement.ph, latestMeasurement.tds));
+            console.log('Modo de promedio:', calcularCalidadPromedio(latestThreeMeasurements));
+          }
         } else {
           console.log('No se encontraron mediciones.');
         }
@@ -61,10 +55,10 @@ const Secondscreen = ({ navigation }) => {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [averageMode]);
-  
+
 
 
   const obtenerUltimasMediciones = () => {
@@ -135,6 +129,9 @@ const calcularIndiceCalidad = (ph, tds) => {
   //Variar el color del círculo de progreso
 
   const interpolateColor = (percent) => {
+    if (percent === null) {
+      return 'rgb(255,255,255)';
+    }
     const r = percent < 50 ? 255 : Math.floor(255 - (percent * 2 - 100) * 255 / 100);
     const g = percent > 50 ? 255 : Math.floor((percent * 2) * 255 / 100);
     return `rgb(${r},${g},0)`;
@@ -142,16 +139,16 @@ const calcularIndiceCalidad = (ph, tds) => {
 
   // Función para obtener el texto dinámico basado en el progreso
   const getQualityText = () => {
-    if (progress >= 85) {
-      return 'Excelente Calidad del Agua!';
-    } else if (progress >= 60) {
-      return 'Buena Calidad del Agua!';
+    if (progress === null) {
+      return 'Seleccione el Tipo de medición';
     } else if (progress >= 50) {
+      return 'Excelente Calidad del Agua!';
+    } else if (progress >= 40) {
+      return 'Buena Calidad del Agua!';
+    } else if (progress >= 30) {
       return 'Calidad del Agua Regular!';
-    } else if (progress <= 49) {
-      return 'Mala Calidad de Agua!';
     } else {
-      return 'Calidad del Agua Desconocida';
+      return 'Mala Calidad de Agua!';
     }
   };
 
